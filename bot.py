@@ -332,11 +332,10 @@ def run_webhook(bot: Bot, dp: Dispatcher) -> None:
 
     async def on_startup(bot: Bot) -> None:
         # Регистрируем webhook в Telegram при старте сервиса.
-        await bot.set_webhook(
-            url=webhook_url,
-            secret_token=config.WEBHOOK_SECRET,
-            drop_pending_updates=True,
-        )
+        kwargs = dict(url=webhook_url, drop_pending_updates=True)
+        if config.WEBHOOK_SECRET:
+            kwargs["secret_token"] = config.WEBHOOK_SECRET
+        await bot.set_webhook(**kwargs)
         logging.info("Webhook установлен: %s", webhook_url)
 
     async def on_shutdown(bot: Bot) -> None:
@@ -348,11 +347,10 @@ def run_webhook(bot: Bot, dp: Dispatcher) -> None:
 
     app = web.Application()
     app.router.add_get("/", health)  # health-check для Render
-    SimpleRequestHandler(
-        dispatcher=dp,
-        bot=bot,
-        secret_token=config.WEBHOOK_SECRET,
-    ).register(app, path=config.WEBHOOK_PATH)
+    handler_kwargs = dict(dispatcher=dp, bot=bot)
+    if config.WEBHOOK_SECRET:
+        handler_kwargs["secret_token"] = config.WEBHOOK_SECRET
+    SimpleRequestHandler(**handler_kwargs).register(app, path=config.WEBHOOK_PATH)
     setup_application(app, dp, bot=bot)
 
     logging.info("Запуск в режиме webhook на порту %s", port)

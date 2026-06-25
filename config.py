@@ -24,8 +24,9 @@ WEBHOOK_URL = (os.getenv("WEBHOOK_URL") or os.getenv("RENDER_EXTERNAL_URL", ""))
 WEBHOOK_PATH = os.getenv("WEBHOOK_PATH", "/webhook")
 
 # Секрет: Telegram присылает его в заголовке, чужие запросы отсекаются.
-# Если не задан — используем сам токен (он уникален и секретен).
-WEBHOOK_SECRET = (os.getenv("WEBHOOK_SECRET") or os.getenv("BOT_TOKEN", "")).strip()
+# Допустимые символы: A-Z a-z 0-9 _ -  (двоеточие НЕ допускается).
+# Если не задан — секрет не используется (достаточно для бесплатного деплоя).
+WEBHOOK_SECRET = os.getenv("WEBHOOK_SECRET", "").strip()
 
 # --- Банковские реквизиты для оплаты ---
 PAYMENT_INFO = (
