@@ -345,12 +345,9 @@ def run_webhook(bot: Bot, dp: Dispatcher) -> None:
         await bot.set_webhook(**kwargs)
         logging.info("Webhook установлен: %s", webhook_url)
 
-    async def on_shutdown(bot: Bot) -> None:
-        await bot.delete_webhook()
-        logging.info("Webhook удалён.")
-
+    # ВАЖНО: webhook при остановке НЕ удаляем. Иначе при передеплое старый
+    # инстанс затирает webhook, который только что поставил новый (race condition).
     dp.startup.register(on_startup)
-    dp.shutdown.register(on_shutdown)
 
     app = web.Application()
     app.router.add_get("/", health)  # health-check для Render
