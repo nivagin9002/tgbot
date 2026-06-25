@@ -31,7 +31,14 @@ from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_applicati
 import config
 
 logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 router = Router()
+
+
+@router.errors()
+async def global_error_handler(event, exception):
+    logger.error("Ошибка при обработке апдейта: %s", exception, exc_info=True)
+    return True
 
 
 # ---------- Состояния для сбора заявок (Сайкл / Турция) ----------
