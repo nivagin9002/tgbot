@@ -109,9 +109,9 @@ def cancel_kb() -> InlineKeyboardMarkup:
 async def cmd_start(message: Message, state: FSMContext) -> None:
     await state.clear()
     await message.answer(
-        "👋 Ольга Первая приветствует вас!\n\n"
+        "Добро пожаловать в комьюнити Ольги Первой!\n\n"
         "Здесь можно записаться на тренировки, турниры и оставить заявку "
-        "на путешествие. Выберите, что вас интересует:",
+        "на КЕМП в Турцию. Выберите, что вас интересует:",
         reply_markup=main_menu(),
     )
 
